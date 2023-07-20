@@ -36,6 +36,7 @@ func main() {
 	// accumulate the intermediate Map output.
 	//
 	intermediate := []mr.KeyValue{}
+	// array of key value pair
 	for _, filename := range os.Args[2:] {
 		file, err := os.Open(filename)
 		if err != nil {
@@ -47,6 +48,7 @@ func main() {
 		}
 		file.Close()
 		kva := mapf(filename, string(content))
+		// append each result to the intermediate
 		intermediate = append(intermediate, kva...)
 	}
 
@@ -68,9 +70,11 @@ func main() {
 	i := 0
 	for i < len(intermediate) {
 		j := i + 1
+		// the same key
 		for j < len(intermediate) && intermediate[j].Key == intermediate[i].Key {
 			j++
 		}
+		// output is a list of strings
 		values := []string{}
 		for k := i; k < j; k++ {
 			values = append(values, intermediate[k].Value)
@@ -89,10 +93,12 @@ func main() {
 // load the application Map and Reduce functions
 // from a plugin file, e.g. ../mrapps/wc.so
 func loadPlugin(filename string) (func(string, string) []mr.KeyValue, func(string, []string) string) {
+	// the map and reduce function is a go plugin
 	p, err := plugin.Open(filename)
 	if err != nil {
 		log.Fatalf("cannot load plugin %v", filename)
 	}
+	// lookup by plugin name
 	xmapf, err := p.Lookup("Map")
 	if err != nil {
 		log.Fatalf("cannot find Map in %v", filename)
