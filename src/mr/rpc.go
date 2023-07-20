@@ -34,3 +34,17 @@ func coordinatorSock() string {
 	s += strconv.Itoa(os.Getuid())
 	return s
 }
+
+type RequestTaskArgs struct {
+}
+
+type RequestTaskReply struct {
+	Task Task
+}
+
+type TaskDoneArgs struct {
+	ID int
+}
+
+type TaskDoneReply struct {
+}
